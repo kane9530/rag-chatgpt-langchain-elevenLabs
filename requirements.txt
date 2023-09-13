@@ -8,5 +8,4 @@ chromadb==0.3.29
 tiktoken
 pydub>=0.24
 streamlit-audiorecorder>=0.0.3
-python==3.10
 pandas<2.1
