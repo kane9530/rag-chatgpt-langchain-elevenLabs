@@ -10,3 +10,4 @@ pydub>=0.24
 streamlit-audiorecorder>=0.0.3
 pandas<2.1
 pygame
+gTTS==2.3.1
