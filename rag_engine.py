@@ -2,7 +2,7 @@ import os, tempfile
 import requests 
 from pathlib import Path
 import subprocess
-from playsound import playsound
+import pygame.mixer
 
 from langchain.chains import RetrievalQA, ConversationalRetrievalChain
 from langchain.embeddings import OpenAIEmbeddings
@@ -196,16 +196,11 @@ def get_speech_from_text(text):
     output_file_path = os.path.join("/tmp", "reply.mp3")
     with open(output_file_path, "wb") as output:
         output.write(r.content)
-    playsound(output_file_path)
-    print('playing sound using  playsound')
-
-    # converting mp3 to wav file
-    subprocess.call(["ffmpeg", "-i",
-                     "reply.mp3", 
-                     "-acodec", "mp3",
-                     "-ar", "44100", "-ab" ,"128k", "output.mp3"])
-    subprocess.call(['ffmpeg', '-i', 'reply.mp3',
-            'reply.wav'])
+    pygame.mixer.init()
+    # Load and play the audio file
+    pygame.mixer.music.load(output_file_path)
+    pygame.mixer.music.play()
+    print('playing sound using pygame')
             
 
 def boot():
@@ -245,10 +240,6 @@ def boot():
                     st.chat_message('human').write(message[0])
                     st.chat_message('ai').write(message[1])
                 print(os.listdir()) 
-                print("Before running audiosegment.from-wav")
-                song = AudioSegment.from_wav("reply.wav")
-                play(song)
-                print("After running audiosegment.from-wav")
 
 if __name__ == '__main__':
     boot()
