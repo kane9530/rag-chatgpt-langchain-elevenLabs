@@ -110,29 +110,28 @@ def query_llm(retriever, query):
 
 def check_secrets():
     # Checks bar if the relevant api_key is not present in the .streamlit/secrets.toml file.
-    
     if "openai_api_key" in st.secrets.openai:
         print("openai api key found!")
         st.session_state.openai_api_key = st.secrets.openai.openai_api_key
-        os.environ["openai_api_key"] = st.secrets.openai.openai_api_key
+        os.environ["OPENAI_API_KEY"] = st.secrets.openai.openai_api_key
     else:
         print("openai api key NOT found!")
     if "pinecone_api_key" in st.secrets.pinecone:
         print("pinecone api key found!")
         st.session_state.pinecone_api_key = st.secrets.pinecone.pinecone_api_key
-        os.environ["pinecone_api_key"] =  st.secrets.pinecone.pinecone_api_key
+        os.environ["PINECONE_API_KEY"] =  st.secrets.pinecone.pinecone_api_key
     else: 
         print("pinecone api key NOT found!")
     if "pinecone_env" in st.secrets.pinecone:
         print("pinecone env key found!")
         st.session_state.pinecone_env = st.secrets.pinecone.pinecone_env
-        os.environ["pinecone_env"] =  st.secrets.pinecone.pinecone_env
+        os.environ["PINECONE_ENV"] =  st.secrets.pinecone.pinecone_env
     else:
         print("pinecone env key NOT found!")
     if "pinecone_index" in st.secrets.pinecone:
         print("pinecone index found!")
         st.session_state.pinecone_index = st.secrets.pinecone.pinecone_index
-        os.environ["pinecone_index"] =  st.secrets.pinecone.pinecone_index
+        os.environ["PINECONE_INDEX"] =  st.secrets.pinecone.pinecone_index
     else:
         print("pinecone index key NOT found!")
 
@@ -185,6 +184,7 @@ def get_speech_from_text(text):
 
 def boot():
     #
+    print("In boot!")
     check_secrets()
     st.chat_message('ai').write("Hi, This is Kane. How can I help you today?")
     with open("styles.css", "r") as css_file:
