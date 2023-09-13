@@ -1,6 +1,8 @@
 import os, tempfile
 import requests 
 from pathlib import Path
+import subprocess
+
 
 from langchain.chains import RetrievalQA, ConversationalRetrievalChain
 from langchain.embeddings import OpenAIEmbeddings
@@ -194,6 +196,10 @@ def get_speech_from_text(text):
     output_filename = "reply.mp3"
     with open(output_filename, "wb") as output:
         output.write(r.content)
+    # converting mp3 to wav file
+    subprocess.call(['ffmpeg', '-i', 'reply.mp3',
+            'reply.wav'])
+            
 
 def boot():
     #
@@ -231,7 +237,7 @@ def boot():
                 for message in st.session_state.messages:
                     st.chat_message('human').write(message[0])
                     st.chat_message('ai').write(message[1])    
-                song = AudioSegment.from_mp3("reply.mp3")
+                song = AudioSegment.from_wav("reply.wav")
                 play(song)
 
 if __name__ == '__main__':
