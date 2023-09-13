@@ -3,6 +3,8 @@ import requests
 from pathlib import Path
 import subprocess
 import pygame.mixer
+from gtts import gTTS
+from io import BytesIO
 
 from langchain.chains import RetrievalQA, ConversationalRetrievalChain
 from langchain.embeddings import OpenAIEmbeddings
@@ -236,11 +238,15 @@ def boot():
                 audio.export("audio.wav", format="wav") 
                 transcript = get_text_from_speech("audio.wav")
                 response = query_llm(st.session_state.retriever, transcript)
-                response_audio = get_speech_from_text(response)
+                sound = BytesIO()
+                tts = gTTS(response, lang='en', tld='com')
+                tts.write_to_fp(sound)
+                
+                #response_audio = get_speech_from_text(response)
                 for message in st.session_state.messages:
                     st.chat_message('human').write(message[0])
                     st.chat_message('ai').write(message[1])
-                print(os.listdir()) 
+                    st.audio(sound)
 
 if __name__ == '__main__':
     boot()

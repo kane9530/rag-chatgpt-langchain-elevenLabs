@@ -1,3 +1,4 @@
 ffmpeg
 libavcodec-extra
 gstreamer1.0-plugins-base
+gTTS==2.3.1
