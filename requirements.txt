@@ -4,7 +4,7 @@ streamlit==1.26.0
 unstructured
 unstructured[pdf]
 openai
-chromadb
+chromadb==0.3.29
 tiktoken
 pydub
 streamlit-audiorecorder
