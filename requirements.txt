@@ -6,3 +6,5 @@ unstructured[pdf]
 openai
 chromadb
 tiktoken
+pydub
+streamlit-audiorecorder
