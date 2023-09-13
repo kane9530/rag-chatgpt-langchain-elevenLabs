@@ -115,7 +115,6 @@ def check_secrets():
         print("openai api key found!")
         st.session_state.openai_api_key = st.secrets.openai.openai_api_key
         os.environ["OPENAI_API_KEY"] = st.secrets.openai.openai_api_key
-
     else:
         print("openai api key NOT found!")
     if "pinecone_api_key" in st.secrets.pinecone:
@@ -133,7 +132,7 @@ def check_secrets():
     if "pinecone_index" in st.secrets.pinecone:
         print("pinecone index found!")
         st.session_state.pinecone_index = st.secrets.pinecone.pinecone_index
-         os.environ["PINECONE_INDEX"] =  st.secrets.pinecone.pinecone_index
+        os.environ["PINECONE_INDEX"] =  st.secrets.pinecone.pinecone_index
     else:
         print("pinecone index key NOT found!")
 
