@@ -193,10 +193,10 @@ def get_speech_from_text(text):
     }
     
     r = requests.post(url, headers={'xi-api-key':os.getenv("ELEVEN_LABS_API_KEY")}, json=data)
-    output_filename = "reply.mp3"
-    with open(output_filename, "wb") as output:
+    output_file_path = os.path.join("/tmp", "reply.mp3")
+    with open(output_file_path, "wb") as output:
         output.write(r.content)
-    playsound(output_filename)
+    playsound(output_file_path)
     print('playing sound using  playsound')
 
     # converting mp3 to wav file
