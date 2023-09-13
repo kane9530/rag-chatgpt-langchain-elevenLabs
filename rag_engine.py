@@ -28,7 +28,6 @@ from audiorecorder import audiorecorder
 import nltk
 import ssl
 import os
-os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
