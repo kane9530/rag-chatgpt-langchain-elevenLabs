@@ -236,9 +236,12 @@ def boot():
                 response_audio = get_speech_from_text(response)
                 for message in st.session_state.messages:
                     st.chat_message('human').write(message[0])
-                    st.chat_message('ai').write(message[1])    
+                    st.chat_message('ai').write(message[1])
+                print(os.listdir()) 
+                print("Before running audiosegment.from-wav")
                 song = AudioSegment.from_wav("reply.wav")
                 play(song)
+                print("After running audiosegment.from-wav")
 
 if __name__ == '__main__':
     boot()
