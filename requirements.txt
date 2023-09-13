@@ -10,3 +10,4 @@ pydub
 streamlit-audiorecorder
 python==3.10
 pandas<2.1
+ffprobe-python
