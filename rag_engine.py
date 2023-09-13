@@ -112,23 +112,28 @@ def check_secrets():
     # Checks bar if the relevant api_key is not present in the .streamlit/secrets.toml file.
     
     if "openai_api_key" in st.secrets.openai:
-        #print("openai api key found!")
+        print("openai api key found!")
         st.session_state.openai_api_key = st.secrets.openai.openai_api_key
+        os.environ["OPENAI_API_KEY"] = st.secrets.openai.openai_api_key
+
     else:
         print("openai api key NOT found!")
     if "pinecone_api_key" in st.secrets.pinecone:
-        #print("pinecone api key found!")
+        print("pinecone api key found!")
         st.session_state.pinecone_api_key = st.secrets.pinecone.pinecone_api_key
+        os.environ["PINECONE_API_KEY"] =  st.secrets.pinecone.pinecone_api_key
     else: 
         print("pinecone api key NOT found!")
     if "pinecone_env" in st.secrets.pinecone:
-        #print("pinecone env key found!")
+        print("pinecone env key found!")
         st.session_state.pinecone_env = st.secrets.pinecone.pinecone_env
+        os.environ["PINECONE_ENV"] =  st.secrets.pinecone.pinecone_env
     else:
         print("pinecone env key NOT found!")
     if "pinecone_index" in st.secrets.pinecone:
-        #print("pinecone index found!")
+        print("pinecone index found!")
         st.session_state.pinecone_index = st.secrets.pinecone.pinecone_index
+         os.environ["PINECONE_INDEX"] =  st.secrets.pinecone.pinecone_index
     else:
         print("pinecone index key NOT found!")
 
@@ -182,6 +187,7 @@ def get_speech_from_text(text):
 def boot():
     #
     check_secrets()
+    st.chat_message('ai').write("Hi, This is Kane. How can I help you today?")
     with open("styles.css", "r") as css_file:
             styles = css_file.read()
             st.markdown(f'<style>{styles}</style>', unsafe_allow_html=True) 
@@ -197,28 +203,25 @@ def boot():
         st.markdown("---")
 # Smaller sidebar on the left below panel 1
     if st.session_state.process_documents_success: 
+        st.sidebar.markdown("# 2) Ask Kane", unsafe_allow_html=True)
         with st.sidebar:
-            st.markdown("# 2) Ask Kane", unsafe_allow_html=True)
             audio = audiorecorder("Click to record", "Click to stop recording")
-        
-            if not audio.empty():
-                audio_duration = len(audio) / 1000.0  # Convert milliseconds to seconds
-                if audio_duration < 1:
-                    st.warning('Press the icon above and start a conversation', icon="⚠️")
-                else:
-                    st.audio(audio.export().read())  
-                    audio.export("audio.wav", format="wav") 
-                    transcript = get_text_from_speech("audio.wav")
-                    response = query_llm(st.session_state.retriever, transcript)
-                    response_audio = get_speech_from_text(response)
-                    
-                    song = AudioSegment.from_mp3("reply.mp3")
-                    play(song)
-                    #st.audio("reply.mp3")
-    st.chat_message('ai').write("Hi, This is Kane. How can I help you today?")
-    for message in st.session_state.messages:
-        st.chat_message('human').write(message[0])
-        st.chat_message('ai').write(message[1])    
+
+        if not audio.empty():
+            audio_duration = len(audio) / 1000.0  # Convert milliseconds to seconds
+            if audio_duration < 1:
+                st.sidebar.warning('Press the icon above and start a conversation', icon="⚠️")
+            else:
+                st.sidebar.audio(audio.export().read())  
+                audio.export("audio.wav", format="wav") 
+                transcript = get_text_from_speech("audio.wav")
+                response = query_llm(st.session_state.retriever, transcript)
+                response_audio = get_speech_from_text(response)
+                for message in st.session_state.messages:
+                    st.chat_message('human').write(message[0])
+                    st.chat_message('ai').write(message[1])    
+                song = AudioSegment.from_mp3("reply.mp3")
+                play(song)
 
 if __name__ == '__main__':
     boot()
