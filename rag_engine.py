@@ -135,6 +135,17 @@ def check_secrets():
         os.environ["PINECONE_INDEX"] =  st.secrets.pinecone.pinecone_index
     else:
         print("pinecone index key NOT found!")
+    if "eleven_labs_api_key" in st.secrets.elevenlabs:
+        print("eleven labs api key  found!")
+        os.environ["ELEVEN_LABS_API_KEY"] =  st.secrets.elevenlabs.eleven_labs_api_key
+    else:
+        print("eleven labs api key NOT found!")
+        
+    if "advisor_voice_id" in st.secrets.elevenlabs:
+        print("eleven labs advisor_voice_id found!")
+        os.environ["ELEVEN_LABS_ADVISOR_KEY"] =  st.secrets.elevenlabs.advisor_voice_id
+    else:
+        print("eleven labs advisor key NOT found!")
 
 
 def process_documents():
@@ -168,7 +179,8 @@ def get_text_from_speech(audio_file):
     return transcript['text']
 
 def get_speech_from_text(text):
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{st.secrets.elevenlabs.advisor_voice_id}/stream"
+    advisor_key=os.getenv("ELEVEN_LABS_ADVISOR_KEY")
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{advisor_key}/stream"
     data = {
         "text": text.replace('"', ''),
         "voice_settings": {
@@ -178,14 +190,13 @@ def get_speech_from_text(text):
         }
     }
     
-    r = requests.post(url, headers={'xi-api-key':st.secrets.elevenlabs.eleven_labs_api_key}, json=data)
+    r = requests.post(url, headers={'xi-api-key':os.getenv("ELEVEN_LABS_API_KEY")}, json=data)
     output_filename = "reply.mp3"
     with open(output_filename, "wb") as output:
         output.write(r.content)
 
 def boot():
     #
-    print("In boot!")
     check_secrets()
     st.chat_message('ai').write("Hi, This is Kane. How can I help you today?")
     with open("styles.css", "r") as css_file:
